@@ -1,0 +1,324 @@
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Mic,
+  Stethoscope,
+  Calendar,
+  MessageSquare,
+  User,
+  Video,
+  Clock,
+} from "lucide-react";
+
+export default function SmartCareApp() {
+  const [screen, setScreen] = useState("home");
+  const [symptom, setSymptom] = useState("");
+  const [language, setLanguage] = useState("English");
+  const [doctorSuggested, setDoctorSuggested] = useState("");
+
+  const upcomingAppointments = [
+    {
+      id: 1,
+      doctor: "Dr. Anita Sharma",
+      specialty: "General Physician",
+      date: "Oct 18, 2025",
+      time: "4:30 PM",
+      status: "Confirmed",
+    },
+    {
+      id: 2,
+      doctor: "Dr. Rajiv Menon",
+      specialty: "Cardiologist",
+      date: "Nov 02, 2025",
+      time: "11:00 AM",
+      status: "Pending",
+    },
+  ];
+
+  const healthStats = {
+    heartRate: 78,
+    bp: "120/78",
+    steps: 6842,
+    mood: "🙂",
+  };
+
+  const handleSymptomSubmit = () => {
+    setDoctorSuggested(
+      "Dr. Anita Sharma — General Physician (Available at 4:30 PM)"
+    );
+    setScreen("recommendation");
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 to-white flex flex-col items-center p-6">
+      <motion.h1
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-3xl font-bold text-teal-700 mb-4"
+      >
+        🩺 SmartCare — AI Healthcare Appointment System
+      </motion.h1>
+
+      {/* Navigation */}
+      <nav className="w-full max-w-4xl flex justify-between items-center mb-6">
+        <div className="flex gap-3">
+          <Button
+            variant={screen === "home" ? undefined : "ghost"}
+            onClick={() => setScreen("home")}
+          >
+            Home
+          </Button>
+          <Button
+            variant={screen === "dashboard" ? undefined : "ghost"}
+            onClick={() => setScreen("dashboard")}
+          >
+            Dashboard
+          </Button>
+          <Button
+            variant={screen === "chatbot" ? undefined : "ghost"}
+            onClick={() => setScreen("chatbot")}
+          >
+            AI Assistant
+          </Button>
+        </div>
+        <div className="flex gap-2 items-center text-sm text-gray-600">
+          <User className="mr-1" /> Abisha
+        </div>
+      </nav>
+
+      {/* Home Screen */}
+      {screen === "home" && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-center max-w-lg"
+        >
+          <p className="text-gray-600 mb-6">
+            Book appointments, get AI-based doctor recommendations, and manage
+            your health easily.
+          </p>
+          <div className="flex flex-col md:flex-row gap-4 justify-center">
+            <Button
+              onClick={() => setScreen("chatbot")}
+              className="bg-teal-600 text-white px-6 py-3 rounded-2xl shadow-lg"
+            >
+              <Stethoscope className="mr-2" /> Book Appointment
+            </Button>
+            <Button variant="outline" onClick={() => setScreen("chatbot")}>
+              <Mic className="mr-2" /> Talk to SmartCare AI
+            </Button>
+            <Button variant="outline" onClick={() => setScreen("dashboard")}>
+              <Clock className="mr-2" /> View Dashboard
+            </Button>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Chatbot Screen */}
+      {screen === "chatbot" && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="w-full max-w-md bg-white p-6 rounded-2xl shadow-lg"
+        >
+          <h2 className="text-xl font-semibold text-teal-700 mb-3">
+            🤖 SmartCare Assistant
+          </h2>
+          <Select value={language} onValueChange={setLanguage}>
+            <SelectTrigger className="w-full mb-3">
+              <SelectValue placeholder="Select Language" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="English">English</SelectItem>
+              <SelectItem value="Tamil">Tamil</SelectItem>
+              <SelectItem value="Hindi">Hindi</SelectItem>
+            </SelectContent>
+          </Select>
+          <Input
+            placeholder="Enter your symptoms (e.g., fever, cough)"
+            value={symptom}
+            onChange={(e) => setSymptom(e.target.value)}
+            className="mb-4"
+          />
+          <Button onClick={handleSymptomSubmit} className="bg-teal-600 w-full">
+            Submit
+          </Button>
+        </motion.div>
+      )}
+
+      {/* AI Recommendation Screen */}
+      {screen === "recommendation" && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="w-full max-w-md"
+        >
+          <Card className="p-4 border-teal-200">
+            <CardContent>
+              <h3 className="text-lg font-semibold text-teal-700 mb-2">
+                AI Suggestion Result
+              </h3>
+              <p className="text-gray-700 mb-4">{doctorSuggested}</p>
+              <div className="flex flex-col gap-3">
+                <Button
+                  onClick={() => setScreen("booking")}
+                  className="bg-teal-600 text-white"
+                >
+                  <Calendar className="mr-2" /> Book Now
+                </Button>
+                <Button variant="outline" onClick={() => setScreen("chatbot")}>
+                  <MessageSquare className="mr-2" /> Change Symptoms
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
+
+      {/* Booking Screen */}
+      {screen === "booking" && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="w-full max-w-md"
+        >
+          <Card className="p-4 border-teal-200">
+            <CardContent>
+              <h3 className="text-lg font-semibold text-teal-700 mb-2">
+                Confirm Appointment
+              </h3>
+              <p className="text-gray-600 mb-3">Doctor: Dr. Anita Sharma</p>
+              <p className="text-gray-600 mb-3">Date: Oct 18, 2025</p>
+              <p className="text-gray-600 mb-4">Time: 4:30 PM</p>
+              <Button className="bg-teal-600 text-white w-full mb-3">
+                <Calendar className="mr-2" /> Confirm Booking
+              </Button>
+              <Button variant="outline" className="w-full">
+                <Video className="mr-2" /> Start Teleconsultation
+              </Button>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
+
+      {/* Dashboard Screen */}
+      {screen === "dashboard" && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6"
+        >
+          {/* Left column: Upcoming appointments */}
+          <div className="md:col-span-2">
+            <h2 className="text-xl font-semibold text-teal-700 mb-3">
+              Upcoming Appointments
+            </h2>
+            <div className="flex flex-col gap-3">
+              {upcomingAppointments.map((a) => (
+                <Card key={a.id} className="p-4 flex justify-between items-center">
+                  <div>
+                    <h3 className="font-semibold">{a.doctor}</h3>
+                    <p className="text-sm text-gray-600">
+                      {a.specialty} • {a.date} • {a.time}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p
+                      className={`text-sm ${
+                        a.status === "Confirmed"
+                          ? "text-green-600"
+                          : "text-orange-600"
+                      }`}
+                    >
+                      {a.status}
+                    </p>
+                    <div className="mt-2 flex gap-2">
+                      <Button size="sm" onClick={() => setScreen("booking")}>
+                        Reschedule
+                      </Button>
+                      <Button size="sm" variant="outline">
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+
+            <h2 className="text-xl font-semibold text-teal-700 mt-6 mb-3">
+              Health Reports
+            </h2>
+            <Card className="p-4">
+              <CardContent>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-gray-500">Heart Rate</p>
+                    <p className="text-2xl font-bold">{healthStats.heartRate} bpm</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Blood Pressure</p>
+                    <p className="text-2xl font-bold">{healthStats.bp}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Steps Today</p>
+                    <p className="text-2xl font-bold">{healthStats.steps}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Mood</p>
+                    <p className="text-2xl font-bold">{healthStats.mood}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Right column: Quick actions & reminders */}
+          <aside className="md:col-span-1">
+            <h2 className="text-xl font-semibold text-teal-700 mb-3">
+              Quick Actions
+            </h2>
+            <div className="flex flex-col gap-3">
+              <Button onClick={() => setScreen("chatbot")} className="w-full">
+                Ask SmartCare AI
+              </Button>
+              <Button variant="outline" className="w-full">
+                Sync Wearable
+              </Button>
+              <Button variant="ghost" className="w-full">
+                Export Report
+              </Button>
+            </div>
+
+            <h2 className="text-xl font-semibold text-teal-700 mt-6 mb-3">
+              Reminders
+            </h2>
+            <div className="space-y-2 text-sm text-gray-700">
+              <div className="p-3 bg-white rounded-lg shadow">
+                <p className="font-semibold">Take Medicine</p>
+                <p className="text-xs text-gray-500">Today • 8:00 PM</p>
+              </div>
+              <div className="p-3 bg-white rounded-lg shadow">
+                <p className="font-semibold">Upcoming Checkup</p>
+                <p className="text-xs text-gray-500">Oct 18, 2025 • 4:30 PM</p>
+              </div>
+            </div>
+          </aside>
+        </motion.div>
+      )}
+
+      <footer className="mt-10 text-sm text-gray-400">
+        © 2025 SmartCare Hackathon Project
+      </footer>
+    </div>
+  );
+}
